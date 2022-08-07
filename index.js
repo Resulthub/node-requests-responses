@@ -8,8 +8,20 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html');
 
     // let path = './views';
-    res.write('Hello World');
-    res.end();
+    // res.write('Hello World');
+    // res.end();
+
+    // send an html file
+    fs.readFile('./views/index.html', (err, data) =>{
+        if (err){
+            console.log(err);
+            res.end();
+        }else{
+            // res.write(data);
+            res.end(data);
+
+        }
+    })
 });
 
 server.listen(3000,'localhost', () => {
