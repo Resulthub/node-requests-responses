@@ -10,6 +10,14 @@ app.set('view engine', 'ejs')
 //listen for requests
 app.listen(3000);
 
+// app.use((req, res) => {
+//     console.log('new request made:');
+//     console.log('host: ', req.hostname);
+//     console.log('path: ', req.path);
+//     console.log('method: ', req.method);
+//     next();
+// });
+
 app.get('/', (req, res) =>{
     const blogs = [
         {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quos.'},
@@ -28,6 +36,6 @@ app.get('/blogs/create', (req, res) =>{
 }); 
 
 //404
-app.get ((req, res) =>{
-    res.status(404).render('404',   {title: '404'});
-});
+app.use((req, res) =>{
+    res.status(404).render('404', {title: '404'});
+})
