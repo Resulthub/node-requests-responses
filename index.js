@@ -1,23 +1,62 @@
 const express = require('express')
+const morgan = require('morgan')
+const mongoose = require('mongoose')
 
 // create an express app
 const app = express()
 
+//connection to mongodb
+const dbURI = 'mongodb+srv://netninja:test1234@cluster0.tpynavz.mongodb.net/node-tuts?retryWrites=true&w=majority';
+mongoose.connect(dbURI,{ useNewUrlParser: true, useUnifiedTopology: true })
+// .then(() => {
+
+//     const app = express();
+
+//     app.get("/", (req, res) => {
+//         res.send("Updated!");
+//     });
+
+//     app.listen(4000, () => {
+//         console.log("Server is running on port 4000");
+//     });
+
+//     }).catch(() => {
+//         console.log('Database connection failed');
+// })
+
+    .then(() => app.listen(4000))
+    .catch((err) => console.log(err));
+
+    // .then(() => console.log('connected to mongodb'))
+    // .catch((err) => console.log(err));
+
+    console.log(mongoose.connection.readyState);
+
+
+
 //resgister view engine
-app.set('view engine', 'ejs')
-// app.set('views', './views')
+app.set('view engine', 'ejs');
+
+mongoose.connect(
+    dbURI,{
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    }
+)
+.then(() => console.log('DB Connection Successfull'))
+.catch((err) => {
+    console.error(err);
+});
 
 //listen for requests
-app.listen(3000);
+// app.listen(4000);
 
-// app.use((req, res) => {
-//     console.log('new request made:');
-//     console.log('host: ', req.hostname);
-//     console.log('path: ', req.path);
-//     console.log('method: ', req.method);
-//     next();
-// });
-
+//middlware & static files
+app.use(morgan('dev'))
+app.use(express.static('./public'))
+ 
 app.get('/', (req, res) =>{
     const blogs = [
         {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quos.'},
@@ -26,6 +65,11 @@ app.get('/', (req, res) =>{
     ];
     res.render('index', {title: 'Home', blogs});
 });
+
+// app.use((req, res, next) => {
+//     console.log('in the next middleware');
+//     next();
+// })
 
 app.get('/about', (req, res) =>{
     res.render('about', {title: 'About Page'});
